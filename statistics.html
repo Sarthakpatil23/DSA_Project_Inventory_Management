@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSymphony - Statistics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i data-feather="package" class="logo-icon w-6 h-6"></i>
+                    <span class="logo-text">StockSymphony</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="forecast.html" class="flex items-center text-gray-600 hover:text-purple-600 transition">
+                        <i data-feather="trending-up" class="w-4 h-4 mr-2"></i>
+                        Forecast & Predictions
+                    </a>
+                    <a href="index.html" class="flex items-center text-gray-600 hover:text-indigo-600 transition">
+                        <i data-feather="arrow-left" class="w-4 h-4 mr-2"></i>
+                        Back to Inventory
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg p-6 mb-8 text-white">
+            <h1 class="text-3xl font-bold mb-2 flex items-center">
+                <i data-feather="bar-chart-2" class="mr-3"></i>
+                Inventory Statistics Dashboard
+            </h1>
+            <p class="text-indigo-100">Visual analytics and insights for your inventory</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Items -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Items</p>
+                        <p id="totalItems" class="text-3xl font-bold text-gray-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-blue-100 rounded-full p-3">
+                        <i data-feather="package" class="text-blue-600 w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Quantity -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Quantity</p>
+                        <p id="totalQty" class="text-3xl font-bold text-gray-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-green-100 rounded-full p-3">
+                        <i data-feather="box" class="text-green-600 w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Value -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Total Value</p>
+                        <p id="totalValue" class="text-3xl font-bold text-gray-800 mt-2">₹0</p>
+                    </div>
+                    <div class="bg-purple-100 rounded-full p-3">
+                        <i data-feather="dollar-sign" class="text-purple-600 w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Low Stock Items -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-500 text-sm font-medium">Low Stock Items</p>
+                        <p id="lowStockCount" class="text-3xl font-bold text-red-600 mt-2">0</p>
+                    </div>
+                    <div class="bg-red-100 rounded-full p-3">
+                        <i data-feather="alert-triangle" class="text-red-600 w-6 h-6"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row 1 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Price Distribution -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i data-feather="trending-up" class="mr-2 text-indigo-500"></i>
+                    Price Distribution
+                </h2>
+                <canvas id="priceChart"></canvas>
+            </div>
+
+            <!-- Quantity Distribution -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i data-feather="pie-chart" class="mr-2 text-green-500"></i>
+                    Quantity Distribution
+                </h2>
+                <canvas id="quantityChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Charts Row 2 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Top 10 Most Expensive -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i data-feather="award" class="mr-2 text-yellow-500"></i>
+                    Top 10 Most Expensive Items
+                </h2>
+                <canvas id="topExpensiveChart"></canvas>
+            </div>
+
+            <!-- Stock Level Analysis -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                    <i data-feather="activity" class="mr-2 text-blue-500"></i>
+                    Stock Level Analysis
+                </h2>
+                <canvas id="stockLevelChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Price Statistics -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+                <i data-feather="info" class="mr-2 text-purple-500"></i>
+                Price Analysis
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <p class="text-gray-500 text-sm">Minimum Price</p>
+                    <p id="minPrice" class="text-xl font-bold text-gray-800 mt-1">₹0</p>
+                    <p id="minPriceItem" class="text-xs text-gray-500 mt-1">-</p>
+                </div>
+                <div class="border-l-4 border-green-500 pl-4">
+                    <p class="text-gray-500 text-sm">Maximum Price</p>
+                    <p id="maxPrice" class="text-xl font-bold text-gray-800 mt-1">₹0</p>
+                    <p id="maxPriceItem" class="text-xs text-gray-500 mt-1">-</p>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <p class="text-gray-500 text-sm">Average Price</p>
+                    <p id="avgPrice" class="text-xl font-bold text-gray-800 mt-1">₹0</p>
+                    <p class="text-xs text-gray-500 mt-1">Mean value</p>
+                </div>
+                <div class="border-l-4 border-pink-500 pl-4">
+                    <p class="text-gray-500 text-sm">Median Price</p>
+                    <p id="medianPrice" class="text-xl font-bold text-gray-800 mt-1">₹0</p>
+                    <p class="text-xs text-gray-500 mt-1">Middle value</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // Initialize Feather icons
+        feather.replace();
+
+        // Get data from localStorage
+        const statsData = JSON.parse(localStorage.getItem('inventoryStats') || '{}');
+        
+        if (!statsData.items || statsData.items.length === 0) {
+            document.body.innerHTML = `
+                <div class="min-h-screen flex items-center justify-center bg-gray-50">
+                    <div class="text-center">
+                        <i data-feather="alert-circle" class="w-16 h-16 text-red-500 mx-auto mb-4"></i>
+                        <h1 class="text-2xl font-bold text-gray-800 mb-2">No Data Available</h1>
+                        <p class="text-gray-600 mb-4">Please go back to the inventory page first.</p>
+                        <a href="index.html" class="btn-primary">Back to Inventory</a>
+                    </div>
+                </div>
+            `;
+            feather.replace();
+        } else {
+            displayStatistics(statsData);
+        }
+
+        function displayStatistics(data) {
+            const items = data.items;
+            
+            // Calculate statistics
+            const totalItems = items.length;
+            const totalQty = items.reduce((sum, item) => sum + item.qty, 0);
+            const totalValue = items.reduce((sum, item) => sum + (item.qty * item.price), 0);
+            const lowStockItems = items.filter(item => item.qty < 10).length;
+            
+            const prices = items.map(item => item.price);
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+            
+            const sortedPrices = [...prices].sort((a, b) => a - b);
+            const median = sortedPrices.length % 2 === 0
+                ? (sortedPrices[sortedPrices.length / 2 - 1] + sortedPrices[sortedPrices.length / 2]) / 2
+                : sortedPrices[Math.floor(sortedPrices.length / 2)];
+            
+            const minPriceItem = items.find(item => item.price === minPrice);
+            const maxPriceItem = items.find(item => item.price === maxPrice);
+            
+            // Update stat cards
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalQty').textContent = totalQty.toLocaleString();
+            document.getElementById('totalValue').textContent = '₹' + totalValue.toLocaleString();
+            document.getElementById('lowStockCount').textContent = lowStockItems;
+            
+            document.getElementById('minPrice').textContent = '₹' + minPrice.toLocaleString();
+            document.getElementById('minPriceItem').textContent = minPriceItem.name;
+            document.getElementById('maxPrice').textContent = '₹' + maxPrice.toLocaleString();
+            document.getElementById('maxPriceItem').textContent = maxPriceItem.name;
+            document.getElementById('avgPrice').textContent = '₹' + avgPrice.toFixed(2);
+            document.getElementById('medianPrice').textContent = '₹' + median.toFixed(2);
+            
+            // Create Charts
+            createPriceDistributionChart(items);
+            createQuantityChart(items);
+            createTopExpensiveChart(items);
+            createStockLevelChart(items);
+        }
+
+        function createPriceDistributionChart(items) {
+            const ctx = document.getElementById('priceChart').getContext('2d');
+            
+            // Group items by price ranges
+            const ranges = [
+                { label: '0-500', min: 0, max: 500, count: 0 },
+                { label: '501-1000', min: 501, max: 1000, count: 0 },
+                { label: '1001-2000', min: 1001, max: 2000, count: 0 },
+                { label: '2001-3000', min: 2001, max: 3000, count: 0 },
+                { label: '3001-5000', min: 3001, max: 5000, count: 0 },
+                { label: '5000+', min: 5001, max: Infinity, count: 0 }
+            ];
+            
+            items.forEach(item => {
+                const range = ranges.find(r => item.price >= r.min && item.price <= r.max);
+                if (range) range.count++;
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ranges.map(r => '₹' + r.label),
+                    datasets: [{
+                        label: 'Number of Items',
+                        data: ranges.map(r => r.count),
+                        backgroundColor: 'rgba(79, 70, 229, 0.7)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+        }
+
+        function createQuantityChart(items) {
+            const ctx = document.getElementById('quantityChart').getContext('2d');
+            
+            const lowStock = items.filter(i => i.qty < 10).length;
+            const mediumStock = items.filter(i => i.qty >= 10 && i.qty < 20).length;
+            const highStock = items.filter(i => i.qty >= 20).length;
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Low Stock (<10)', 'Medium Stock (10-19)', 'High Stock (20+)'],
+                    datasets: [{
+                        data: [lowStock, mediumStock, highStock],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)',
+                            'rgba(251, 191, 36, 0.7)',
+                            'rgba(34, 197, 94, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(251, 191, 36, 1)',
+                            'rgba(34, 197, 94, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function createTopExpensiveChart(items) {
+            const ctx = document.getElementById('topExpensiveChart').getContext('2d');
+            
+            // Sort by price (descending) and take top 10
+            const sortedByPrice = [...items].sort((a, b) => b.price - a.price).slice(0, 10);
+            
+            // Generate gradient colors from purple to pink
+            const colors = sortedByPrice.map((_, i) => {
+                const hue = 270 - (i * 10); // Purple to pink
+                return `hsla(${hue}, 70%, 60%, 0.7)`;
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedByPrice.map(item => {
+                        const name = item.name.length > 15 ? item.name.substring(0, 15) + '...' : item.name;
+                        return name;
+                    }),
+                    datasets: [{
+                        label: 'Price (₹)',
+                        data: sortedByPrice.map(item => item.price),
+                        backgroundColor: colors,
+                        borderColor: colors.map(c => c.replace('0.7', '1')),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Price: ₹' + context.parsed.x.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: { 
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStockLevelChart(items) {
+            const ctx = document.getElementById('stockLevelChart').getContext('2d');
+            
+            // Sort by quantity (ascending) to show lowest stock first
+            const sortedByQty = [...items].sort((a, b) => a.qty - b.qty).slice(0, 12);
+            
+            // Color code based on stock level
+            const backgroundColors = sortedByQty.map(item => {
+                if (item.qty < 10) return 'rgba(239, 68, 68, 0.6)'; // Red for low stock
+                if (item.qty < 20) return 'rgba(251, 191, 36, 0.6)'; // Yellow for medium
+                return 'rgba(34, 197, 94, 0.6)'; // Green for high stock
+            });
+            
+            const borderColors = sortedByQty.map(item => {
+                if (item.qty < 10) return 'rgba(239, 68, 68, 1)';
+                if (item.qty < 20) return 'rgba(251, 191, 36, 1)';
+                return 'rgba(34, 197, 94, 1)';
+            });
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedByQty.map(item => {
+                        const name = item.name.length > 12 ? item.name.substring(0, 12) + '...' : item.name;
+                        return name;
+                    }),
+                    datasets: [{
+                        label: 'Stock Quantity',
+                        data: sortedByQty.map(item => item.qty),
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const qty = context.parsed.y;
+                                    let status = qty < 10 ? 'Low Stock' : qty < 20 ? 'Medium Stock' : 'High Stock';
+                                    return [`Quantity: ${qty}`, status];
+                                },
+                                title: function(context) {
+                                    return sortedByQty[context[0].dataIndex].name;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            ticks: { 
+                                precision: 0,
+                                callback: function(value) {
+                                    return value + ' units';
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Quantity in Stock'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Items (Sorted by Stock Level)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

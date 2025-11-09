@@ -1,57 +1,162 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Inventory DSA Project</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockSymphony - Inventory Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-content">
+                <div class="logo">
+                    <i data-feather="package" class="logo-icon w-6 h-6"></i>
+                    <span class="logo-text">StockSymphony</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="text-sm text-gray-600">DSA Based Inventory</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto px-4 py-8">
+        <!-- DSA Info Banner -->
+        <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl shadow-lg p-6 mb-8 text-white">
+            <div>
+                <h1 class="text-2xl font-bold mb-2 flex items-center">
+                    <i data-feather="cpu" class="mr-3"></i>
+                    DSA-Powered Inventory System
+                </h1>
+                <p class="text-indigo-100 text-sm">
+                    Utilizing: Linked Lists • Hash Tables • Stacks • Queues • Merge Sort • Binary Search
+                </p>
+            </div>
+        </div>
 
-<h1>Inventory Management System (DSA Based)</h1>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Add/Update Section -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                    <i data-feather="plus-circle" class="mr-2 text-blue-500"></i>
+                    Add/Update Item
+                </h2>
+                <div class="space-y-4">
+                    <input id="itemId" type="number" placeholder="ID" class="input-field">
+                    <input id="itemName" type="text" placeholder="Name" class="input-field">
+                    <input id="itemQty" type="number" placeholder="Quantity" class="input-field">
+                    <input id="itemPrice" type="number" placeholder="Price" class="input-field">
+                    <div class="flex space-x-3">
+                        <button onclick="addItem()" class="btn-primary">
+                            <i data-feather="plus" class="w-4 h-4 mr-2"></i>Add Item
+                        </button>
+                        <button onclick="updateItem()" class="btn-secondary">
+                            <i data-feather="edit" class="w-4 h-4 mr-2"></i>Update
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-<div class="container">
+            <!-- Delete/Search Section -->
+            <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                            <i data-feather="trash-2" class="mr-2 text-red-500"></i>
+                            Delete Item
+                        </h2>
+                        <div class="flex items-center space-x-3">
+                            <input id="deleteId" type="number" placeholder="Enter ID to delete" class="input-field flex-1">
+                            <button onclick="deleteItem()" class="btn-danger">
+                                <i data-feather="trash" class="w-4 h-4 mr-2"></i>Delete
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                            <i data-feather="search" class="mr-2 text-purple-500"></i>
+                            Search Item
+                        </h2>
+                        <div class="flex items-center space-x-3 mb-2">
+                            <input id="searchId" type="number" placeholder="Enter ID to search" class="input-field flex-1">
+                            <button onclick="searchItem()" class="btn-accent">
+                                <i data-feather="search" class="w-4 h-4 mr-2"></i>Search
+                            </button>
+                        </div>
+                        <button id="searchModeBtn" onclick="toggleSearchMode()" class="btn-secondary w-full text-xs">
+                            <i data-feather="zap" class="w-4 h-4 mr-2"></i>Hash Table Search
+                        </button>
+                        <p id="searchResult" class="mt-3 text-sm text-gray-600"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="section">
-        <h2>Add / Update Item</h2>
+        <!-- Sorting Section -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
+                <i data-feather="filter" class="mr-2 text-green-500"></i>
+                Sorting & Operations
+            </h2>
+            <div class="flex flex-wrap gap-3">
+                <button onclick="sortByPrice()" class="btn-sort">
+                    <i data-feather="dollar-sign" class="w-4 h-4 mr-2"></i>Sort by Price (High to Low)
+                </button>
+                <button onclick="sortByQty()" class="btn-sort">
+                    <i data-feather="box" class="w-4 h-4 mr-2"></i>Sort by Quantity (Low to High)
+                </button>
+                <button onclick="undoLastOperation()" class="btn-secondary">
+                    <i data-feather="rotate-ccw" class="w-4 h-4 mr-2"></i>Undo Last Operation
+                </button>
+                <button onclick="showLowStockAlerts()" class="btn-danger">
+                    <i data-feather="alert-triangle" class="w-4 h-4 mr-2"></i>Low Stock Alerts
+                </button>
+                <button onclick="calculateStats()" class="btn-accent">
+                    <i data-feather="bar-chart-2" class="w-4 h-4 mr-2"></i>View Statistics
+                </button>
+                <button onclick="openForecast()" class="btn-primary">
+                    <i data-feather="trending-up" class="w-4 h-4 mr-2"></i>Forecast & Predictions
+                </button>
+            </div>
+        </div>
 
-        <input id="itemId" type="number" placeholder="ID">
-        <input id="itemName" type="text" placeholder="Name">
-        <input id="itemQty" type="number" placeholder="Quantity">
-        <input id="itemPrice" type="number" placeholder="Price">
+        <!-- Inventory Table -->
+        <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-semibold text-gray-800 flex items-center">
+                    <i data-feather="database" class="mr-2 text-indigo-500"></i>
+                    Inventory
+                </h2>
+                <p id="totalCount" class="text-sm text-gray-500"></p>
+            </div>
+            <div class="overflow-x-auto">
+                <table id="invTable" class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Qty</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Table rows will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 
-        <button onclick="addItem()">Add Item</button>
-        <button onclick="updateItem()">Update Item</button>
-    </div>
-
-    <div class="section">
-        <h2>Delete Item</h2>
-        <input id="deleteId" type="number" placeholder="Delete by ID">
-        <button onclick="deleteItem()">Delete Item</button>
-    </div>
-
-    <div class="section">
-        <h2>Search Item</h2>
-        <input id="searchId" type="number" placeholder="Search by ID">
-        <button onclick="searchItem()">Search</button>
-        <p id="searchResult"></p>
-    </div>
-
-    <div class="section">
-        <h2>Sorting</h2>
-        <button onclick="sortByPrice()">Sort by Price (High → Low)</button>
-        <button onclick="sortByQty()">Sort by Quantity (Low → High)</button>
-    </div>
-
-    <div class="section">
-        <h2>Inventory</h2>
-        <p id="totalCount"></p>
-        <table id="invTable">
-            <tr><th>ID</th><th>Name</th><th>Qty</th><th>Price</th></tr>
-        </table>
-        
-    </div>
-
-</div>
-
-<script src="app.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Initialize Feather icons
+        feather.replace();
+    </script>
 </body>
 </html>
