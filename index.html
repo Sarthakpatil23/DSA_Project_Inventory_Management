@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory DSA Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Inventory Management System (DSA Based)</h1>
+
+<div class="container">
+
+    <div class="section">
+        <h2>Add / Update Item</h2>
+
+        <input id="itemId" type="number" placeholder="ID">
+        <input id="itemName" type="text" placeholder="Name">
+        <input id="itemQty" type="number" placeholder="Quantity">
+        <input id="itemPrice" type="number" placeholder="Price">
+
+        <button onclick="addItem()">Add Item</button>
+        <button onclick="updateItem()">Update Item</button>
+    </div>
+
+    <div class="section">
+        <h2>Delete Item</h2>
+        <input id="deleteId" type="number" placeholder="Delete by ID">
+        <button onclick="deleteItem()">Delete Item</button>
+    </div>
+
+    <div class="section">
+        <h2>Search Item</h2>
+        <input id="searchId" type="number" placeholder="Search by ID">
+        <button onclick="searchItem()">Search</button>
+        <p id="searchResult"></p>
+    </div>
+
+    <div class="section">
+        <h2>Sorting</h2>
+        <button onclick="sortByPrice()">Sort by Price (High → Low)</button>
+        <button onclick="sortByQty()">Sort by Quantity (Low → High)</button>
+    </div>
+
+    <div class="section">
+        <h2>Inventory</h2>
+        <p id="totalCount"></p>
+        <table id="invTable">
+            <tr><th>ID</th><th>Name</th><th>Qty</th><th>Price</th></tr>
+        </table>
+        
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

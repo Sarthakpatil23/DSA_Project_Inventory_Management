@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #eef1f4;
+    padding: 30px;
+    color: #222;
+}
+
+h1 {
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+input {
+    padding: 10px;
+    margin: 6px;
+    border: 1px solid #c7c7c7;
+    border-radius: 6px;
+    outline: none;
+    width: 180px;
+}
+
+input:focus {
+    border-color: #5a8dee;
+}
+
+button {
+    padding: 10px 16px;
+    margin: 6px;
+    background: #5a8dee;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    color: white;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #4a7ad1;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: #f0f3f7;
+    padding: 12px;
+    border-bottom: 1px solid #d3d6da;
+    font-weight: 600;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e6e8eb;
+    text-align: center;
+}
+
+
+/* Low Stock Highlight */
+.low-stock {
+    background: #ffd4d4 !important;
+}
+
